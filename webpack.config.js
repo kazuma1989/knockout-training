@@ -16,18 +16,15 @@ module.exports = {
         query:{
           presets: ['env'],
           plugins: [
+            // Use import/export syntax with IE8
             'transform-es2015-modules-commonjs',
             'transform-es3-modules-literals',
-          ]
-        }
-      },
-      {
-        test: /\.js$/,
-        loader: 'babel',
-        query: {
-          plugins: [
+
+            // Use any names as members or properties with IE8
             'transform-es3-member-expression-literals',
             'transform-es3-property-literals',
+
+            // Fix bugs in IE8
             'transform-jscript',
           ]
         }
