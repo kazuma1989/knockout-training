@@ -1,7 +1,6 @@
 import 'es5-polyfill';
 import ko from 'knockout';
-import $ from 'jquery';
+import AppViewModel from './AppViewModel';
 
-// console.log(ko);
-
-$('#root').text('HELLO WORLD');
+// Activates knockout.js
+ko.applyBindings(new AppViewModel());
