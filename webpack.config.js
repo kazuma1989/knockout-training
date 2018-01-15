@@ -14,7 +14,11 @@ module.exports = {
         exclude: /node_modules/,
         loader: 'babel',
         query:{
-          presets: ['env']
+          presets: ['env'],
+          plugins: [
+            'transform-es2015-modules-commonjs',
+            'transform-es3-modules-literals',
+          ]
         }
       },
       {
