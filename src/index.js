@@ -1,3 +1,7 @@
 require('es5-polyfill');
+const ko = require('knockout');
+const $ = require('jquery');
 
-console.log('hello world');
+console.log(ko);
+
+$('#root').text('hello');
