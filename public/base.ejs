@@ -1,16 +1,14 @@
+<% const { vars } = htmlWebpackPlugin.options %>
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Knockout.js app</title>
+    <title><%= vars.title %></title>
   </head>
   <body>
     <noscript>
       You need to enable JavaScript to run this app.
     </noscript>
-    <div id="root"></div>
-    <p>First name: <strong data-bind="text: firstName"></strong></p>
-    <p>Last name: <strong data-bind="text: lastName, click: handleClick"></strong></p>
   </body>
 </html>

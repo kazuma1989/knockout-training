@@ -1,5 +1,6 @@
 const { optimize: { CommonsChunkPlugin } } = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 module.exports = {
   entry: {
@@ -11,6 +12,7 @@ module.exports = {
     index: `${__dirname}/src/index.js`,
     another: `${__dirname}/src/another.js`,
   },
+  devtool: 'inline-source-map',
   output: {
     path: `${__dirname}/dist`,
     filename: '[name].[chunkhash:8].js'
@@ -40,22 +42,27 @@ module.exports = {
     ]
   },
   plugins: [
+    new CleanWebpackPlugin(['dist']),
     new CommonsChunkPlugin({
       name: 'vendor',
+      minChunks: Infinity,
     }),
     new CommonsChunkPlugin({
       name: 'manifest',
+      minChunks: Infinity,
     }),
     new HtmlWebpackPlugin({
       inject: true,
-      hash: true,
       chunks: ['manifest', 'vendor', 'index'],
       filename: 'index.html',
-      template: `${__dirname}/public/index.html`,
+      template: `${__dirname}/public/base.ejs`,
+      vars: {
+        title: 'Knockout.js app',
+        content: './index',
+      },
     }),
     new HtmlWebpackPlugin({
       inject: true,
-      hash: true,
       chunks: ['manifest', 'vendor', 'another'],
       filename: 'another.html',
       // template: `${__dirname}/public/another.html`,
