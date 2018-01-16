@@ -13,6 +13,12 @@ module.exports = {
     another: `${__dirname}/src/another.js`,
   },
   devtool: 'inline-source-map',
+  devServer: {
+    contentBase: `${__dirname}/dist`,
+    // Use disableHostCheck because host config does not work
+    // host: process.env.HOST || '0.0.0.0',
+    disableHostCheck: true,
+  },
   output: {
     path: `${__dirname}/dist`,
     filename: '[name].[chunkhash:8].js'
