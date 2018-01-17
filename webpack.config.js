@@ -1,7 +1,12 @@
+const { readdirSync, statSync } = require('fs');
 const { optimize: { CommonsChunkPlugin } } = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-const pages = require('./src/pages.json');
+
+const { exclude } = require('./build.json');
+const pages = readdirSync('./src')
+  .filter(file => exclude.indexOf(file) === -1)
+  .filter(file => statSync(`./src/${file}`).isDirectory());
 
 module.exports = {
   entry: Object.assign(
