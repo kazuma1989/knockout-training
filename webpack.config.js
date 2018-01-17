@@ -9,10 +9,10 @@ module.exports = {
       'jquery',
       'knockout',
     ],
-    index: `${__dirname}/src/index.js`,
-    another: `${__dirname}/src/another.js`,
+    index: `${__dirname}/src/index/script.js`,
+    another: `${__dirname}/src/another/script.js`,
   },
-  devtool: 'inline-source-map',
+  devtool: 'cheap-module-eval-source-map',
   devServer: {
     contentBase: `${__dirname}/dist`,
     // Use disableHostCheck because host config does not work
@@ -61,17 +61,18 @@ module.exports = {
       name: 'manifest',
       minChunks: Infinity,
     }),
+  ].concat([
     new HtmlWebpackPlugin({
       filename: 'index.html',
-      template: `${__dirname}/public/index.hbs`,
+      template: `${__dirname}/src/index/page.hbs`,
       chunks: ['manifest', 'vendor', 'index'],
     }),
     new HtmlWebpackPlugin({
       filename: 'another.html',
-      template: `${__dirname}/public/another.hbs`,
+      template: `${__dirname}/src/another/page.hbs`,
       chunks: ['manifest', 'vendor', 'another'],
     }),
-  ],
+  ]),
   resolve: {
     extensions: ['', '.js']
   }
