@@ -2,11 +2,13 @@ const { readdirSync, statSync } = require('fs');
 const { optimize: { CommonsChunkPlugin } } = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-
 const config = require('./build.config.json');
-const pages = readdirSync(`${__dirname}/${config.path.src}`)
+
+const srcDir = `${__dirname}/${config.path.src}`;
+const distDir = `${__dirname}/${config.path.dist}`;
+const pages = readdirSync(srcDir)
   .filter(file => config.page.exclude.indexOf(file) === -1)
-  .filter(file => statSync(`${__dirname}/${config.path.src}/${file}`).isDirectory());
+  .filter(file => statSync(`${srcDir}/${file}`).isDirectory());
 
 module.exports = {
   entry: Object.assign(
@@ -14,11 +16,11 @@ module.exports = {
       vendor: config.entry.vendor,
     },
     ...pages.map(page => ({
-      [page]: `${__dirname}/${config.path.src}/${page}/script.js`
+      [page]: `${srcDir}/${page}/script.js`
     }))
   ),
   output: {
-    path: `${__dirname}/${config.path.dist}`,
+    path: distDir,
     filename: '[name].[chunkhash:8].js'
   },
   module: {
@@ -64,11 +66,11 @@ module.exports = {
       name: 'manifest',
       minChunks: Infinity,
     }),
-    new CleanWebpackPlugin([config.path.dist])
+    new CleanWebpackPlugin([distDir])
   ].concat(pages.map(page =>
     new HtmlWebpackPlugin({
       filename: `${page}.html`,
-      template: `${__dirname}/${config.path.src}/${page}/view.hbs`,
+      template: `${srcDir}/${page}/view.hbs`,
       chunks: [
         'manifest',
         'vendor',
