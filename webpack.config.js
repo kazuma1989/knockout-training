@@ -1,24 +1,21 @@
 const { optimize: { CommonsChunkPlugin } } = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const pages = require('./src/pages.json');
 
 module.exports = {
-  entry: {
-    vendor: [
-      'es5-polyfill',
-      'jquery',
-      'knockout',
-    ],
-    index: `${__dirname}/src/index/script.js`,
-    another: `${__dirname}/src/another/script.js`,
-  },
-  devtool: 'cheap-module-eval-source-map',
-  devServer: {
-    contentBase: `${__dirname}/dist`,
-    // Use disableHostCheck because host config does not work
-    // host: process.env.HOST || '0.0.0.0',
-    disableHostCheck: true,
-  },
+  entry: Object.assign(
+    {
+      vendor: [
+        'es5-polyfill',
+        'jquery',
+        'knockout',
+      ],
+    },
+    ...pages.map(page => ({
+      [page]: `${__dirname}/src/${page}/script.js`
+    }))
+  ),
   output: {
     path: `${__dirname}/dist`,
     filename: '[name].[chunkhash:8].js'
@@ -27,7 +24,7 @@ module.exports = {
     loaders: [
       {
         test: /\.hbs$/,
-        loader: 'handlebars-loader',
+        loader: 'handlebars',
       },
       {
         test: /\.js$/,
@@ -51,8 +48,15 @@ module.exports = {
       },
     ]
   },
+  // devtool: 'cheap-module-eval-source-map',
+  devServer: {
+    open: true,
+    compress: true,
+    // Use disableHostCheck because host config does not work
+    // host: process.env.HOST || '0.0.0.0',
+    disableHostCheck: true,
+  },
   plugins: [
-    new CleanWebpackPlugin(['dist']),
     new CommonsChunkPlugin({
       name: 'vendor',
       minChunks: Infinity,
@@ -61,19 +65,16 @@ module.exports = {
       name: 'manifest',
       minChunks: Infinity,
     }),
-  ].concat([
+    new CleanWebpackPlugin(['dist'])
+  ].concat(pages.map(page =>
     new HtmlWebpackPlugin({
-      filename: 'index.html',
-      template: `${__dirname}/src/index/page.hbs`,
-      chunks: ['manifest', 'vendor', 'index'],
-    }),
-    new HtmlWebpackPlugin({
-      filename: 'another.html',
-      template: `${__dirname}/src/another/page.hbs`,
-      chunks: ['manifest', 'vendor', 'another'],
-    }),
-  ]),
-  resolve: {
-    extensions: ['', '.js']
-  }
+      filename: `${page}.html`,
+      template: `${__dirname}/src/${page}/view.hbs`,
+      chunks: [
+        'manifest',
+        'vendor',
+        page
+      ]
+    })
+  )),
 };
