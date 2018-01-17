@@ -26,6 +26,10 @@ module.exports = {
   module: {
     loaders: [
       {
+        test: /\.hbs$/,
+        loader: 'handlebars-loader',
+      },
+      {
         test: /\.js$/,
         exclude: /node_modules/,
         loader: 'babel',
@@ -44,7 +48,7 @@ module.exports = {
             'transform-jscript',
           ]
         }
-      }
+      },
     ]
   },
   plugins: [
@@ -58,20 +62,14 @@ module.exports = {
       minChunks: Infinity,
     }),
     new HtmlWebpackPlugin({
-      inject: true,
-      chunks: ['manifest', 'vendor', 'index'],
       filename: 'index.html',
-      template: `${__dirname}/public/base.ejs`,
-      vars: {
-        title: 'Knockout.js app',
-        content: './index',
-      },
+      template: `${__dirname}/public/index.hbs`,
+      chunks: ['manifest', 'vendor', 'index'],
     }),
     new HtmlWebpackPlugin({
-      inject: true,
-      chunks: ['manifest', 'vendor', 'another'],
       filename: 'another.html',
-      // template: `${__dirname}/public/another.html`,
+      template: `${__dirname}/public/another.hbs`,
+      chunks: ['manifest', 'vendor', 'another'],
     }),
   ],
   resolve: {
