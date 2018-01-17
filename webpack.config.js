@@ -3,26 +3,22 @@ const { optimize: { CommonsChunkPlugin } } = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 
-const { exclude } = require('./build.json');
-const pages = readdirSync('./src')
-  .filter(file => exclude.indexOf(file) === -1)
-  .filter(file => statSync(`./src/${file}`).isDirectory());
+const config = require('./build.config.json');
+const pages = readdirSync(`${__dirname}/${config.path.src}`)
+  .filter(file => config.page.exclude.indexOf(file) === -1)
+  .filter(file => statSync(`${__dirname}/${config.path.src}/${file}`).isDirectory());
 
 module.exports = {
   entry: Object.assign(
     {
-      vendor: [
-        'es5-polyfill',
-        'jquery',
-        'knockout',
-      ],
+      vendor: config.entry.vendor,
     },
     ...pages.map(page => ({
-      [page]: `${__dirname}/src/${page}/script.js`
+      [page]: `${__dirname}/${config.path.src}/${page}/script.js`
     }))
   ),
   output: {
-    path: `${__dirname}/dist`,
+    path: `${__dirname}/${config.path.dist}`,
     filename: '[name].[chunkhash:8].js'
   },
   module: {
@@ -53,14 +49,12 @@ module.exports = {
       },
     ]
   },
-  // devtool: 'cheap-module-eval-source-map',
-  devServer: {
-    open: true,
-    compress: true,
+  devtool: config.devtool,
+  devServer: Object.assign({
     // Use disableHostCheck because host config does not work
     // host: process.env.HOST || '0.0.0.0',
     disableHostCheck: true,
-  },
+  }, config.devServer),
   plugins: [
     new CommonsChunkPlugin({
       name: 'vendor',
@@ -70,11 +64,11 @@ module.exports = {
       name: 'manifest',
       minChunks: Infinity,
     }),
-    new CleanWebpackPlugin(['dist'])
+    new CleanWebpackPlugin([config.path.dist])
   ].concat(pages.map(page =>
     new HtmlWebpackPlugin({
       filename: `${page}.html`,
-      template: `${__dirname}/src/${page}/view.hbs`,
+      template: `${__dirname}/${config.path.src}/${page}/view.hbs`,
       chunks: [
         'manifest',
         'vendor',

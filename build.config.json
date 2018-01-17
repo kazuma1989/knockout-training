@@ -1,0 +1,23 @@
+{
+  "path": {
+    "src": "src",
+    "dist": "dist"
+  },
+  "page": {
+    "exclude": [
+      "common"
+    ]
+  },
+  "entry": {
+    "vendor": [
+      "es5-polyfill",
+      "jquery",
+      "knockout"
+    ]
+  },
+  "devtool": false,
+  "devServer": {
+    "open": true,
+    "compress": true
+  }
+}
