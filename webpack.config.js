@@ -78,8 +78,8 @@ module.exports = {
   devServer: {
     open: true,
     compress: true,
-    // Use disableHostCheck because host config does not work
-    // host: process.env.HOST || '0.0.0.0',
+    // Expose the dev server to the internet
+    host: process.env.HOST || '0.0.0.0',
     disableHostCheck: true,
   },
   plugins: [

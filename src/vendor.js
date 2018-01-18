@@ -9,4 +9,4 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 // see https://webpack.js.org/plugins/provide-plugin/
 window.jQuery = jQuery;
 require('bootstrap');
-delete window.jQuery;
+window.jQuery = undefined;
