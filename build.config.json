@@ -7,14 +7,5 @@
     "exclude": [
       "common"
     ]
-  },
-  "entry": {
-    "vendor": [
-      "es5-polyfill",
-      "knockout",
-      "jquery",
-      "bootstrap",
-      "bootstrap/dist/css/bootstrap.min.css"
-    ]
   }
 }

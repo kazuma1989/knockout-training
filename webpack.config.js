@@ -16,7 +16,7 @@ const pages = readdirSync(srcDir)
 module.exports = {
   entry: Object.assign(
     {
-      vendor: config.entry.vendor,
+      vendor: `${srcDir}/vendor.js`,
     },
     ...pages.map(page => ({
       [page]: `${srcDir}/${page}/main.js`
