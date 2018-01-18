@@ -11,8 +11,10 @@
   "entry": {
     "vendor": [
       "es5-polyfill",
+      "knockout",
       "jquery",
-      "knockout"
+      "bootstrap",
+      "bootstrap/dist/css/bootstrap.min.css"
     ]
   }
 }

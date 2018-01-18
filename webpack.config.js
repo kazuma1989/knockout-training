@@ -2,6 +2,7 @@ const { readdirSync, statSync } = require('fs');
 const { optimize: { CommonsChunkPlugin } } = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const config = require('./build.config');
 
 const isProduction = process.env.NODE_ENV === 'production';
@@ -29,13 +30,14 @@ module.exports = {
     loaders: [
       {
         test: /\.css$/,
-        loaders: [
-          'style-loader',
-          'css-loader'
-        ]
+        loader: ExtractTextPlugin.extract('style-loader', 'css-loader'),
       },
       {
         test: /\.(png|svg|jpe?g|gif)$/,
+        loader: 'file-loader',
+      },
+      {
+        test: /\.(woff|woff2|eot|ttf|otf)$/,
         loader: 'file-loader',
       },
       {
@@ -73,6 +75,7 @@ module.exports = {
     disableHostCheck: true,
   },
   plugins: [
+    new ExtractTextPlugin('[name].[contenthash:8].css'),
     new CommonsChunkPlugin({
       name: 'vendor',
       minChunks: Infinity,
