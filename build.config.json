@@ -14,10 +14,5 @@
       "jquery",
       "knockout"
     ]
-  },
-  "devtool": false,
-  "devServer": {
-    "open": true,
-    "compress": true
   }
 }

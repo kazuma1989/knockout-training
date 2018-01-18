@@ -4,6 +4,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const config = require('./build.config');
 
+const isProduction = process.env.NODE_ENV === 'production';
+
 const srcDir = `${__dirname}/${config.path.src}`;
 const distDir = `${__dirname}/${config.path.dist}`;
 const pages = readdirSync(srcDir)
@@ -33,17 +35,17 @@ module.exports = {
         ]
       },
       {
-        test: /\.(png|svg|jpg|gif)$/,
+        test: /\.(png|svg|jpe?g|gif)$/,
         loader: 'file-loader',
       },
       {
         test: /\.hbs$/,
-        loader: 'handlebars',
+        loader: 'handlebars-loader',
       },
       {
         test: /\.js$/,
         exclude: /node_modules/,
-        loader: 'babel',
+        loader: 'babel-loader',
         query:{
           presets: ['env'],
           plugins: [
@@ -62,12 +64,14 @@ module.exports = {
       },
     ]
   },
-  devtool: config.devtool,
-  devServer: Object.assign({
+  devtool: isProduction ? 'source-map' : 'cheap-module-source-map',
+  devServer: {
+    open: true,
+    compress: true,
     // Use disableHostCheck because host config does not work
     // host: process.env.HOST || '0.0.0.0',
     disableHostCheck: true,
-  }, config.devServer),
+  },
   plugins: [
     new CommonsChunkPlugin({
       name: 'vendor',
