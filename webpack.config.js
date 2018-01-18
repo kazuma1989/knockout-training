@@ -30,7 +30,15 @@ module.exports = {
     loaders: [
       {
         test: /\.css$/,
-        loader: ExtractTextPlugin.extract('style-loader', 'css-loader?modules'),
+        exclude: /node_modules/,
+        loaders: [
+          'style-loader',
+          'css-loader?modules'
+        ]
+      },
+      {
+        test: /node_modules.+\.css$/,
+        loader: ExtractTextPlugin.extract('style-loader', 'css-loader'),
       },
       {
         test: /\.(png|svg|jpe?g|gif)$/,
