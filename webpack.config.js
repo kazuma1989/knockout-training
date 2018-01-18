@@ -16,7 +16,7 @@ module.exports = {
       vendor: config.entry.vendor,
     },
     ...pages.map(page => ({
-      [page]: `${srcDir}/${page}/script.js`
+      [page]: `${srcDir}/${page}/main.js`
     }))
   ),
   output: {
@@ -81,7 +81,7 @@ module.exports = {
   ].concat(pages.map(page =>
     new HtmlWebpackPlugin({
       filename: `${page}.html`,
-      template: `${srcDir}/${page}/view.hbs`,
+      template: `${srcDir}/${page}/main.hbs`,
       chunks: [
         'manifest',
         'vendor',
