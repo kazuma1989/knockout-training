@@ -2,7 +2,7 @@ const { readdirSync, statSync } = require('fs');
 const { optimize: { CommonsChunkPlugin } } = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-const config = require('./build.config.json');
+const config = require('./build.config');
 
 const srcDir = `${__dirname}/${config.path.src}`;
 const distDir = `${__dirname}/${config.path.dist}`;
@@ -25,6 +25,17 @@ module.exports = {
   },
   module: {
     loaders: [
+      {
+        test: /\.css$/,
+        loaders: [
+          'style-loader',
+          'css-loader'
+        ]
+      },
+      {
+        test: /\.(png|svg|jpg|gif)$/,
+        loader: 'file-loader',
+      },
       {
         test: /\.hbs$/,
         loader: 'handlebars',

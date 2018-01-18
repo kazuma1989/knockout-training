@@ -6,6 +6,8 @@ export default class AppViewModel {
   constructor() {
     this.firstName = ko.observable('Bert');
     this.lastName = ko.observable('Bertington');
+
+    this.filename = ko.observable();
   }
 
   handleClick() {
