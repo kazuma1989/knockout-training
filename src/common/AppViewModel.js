@@ -16,4 +16,8 @@ export default class AppViewModel {
     const currentName = this.lastName();
     this.lastName(currentName.toUpperCase());
   }
+
+  isActive(pathname) {
+    return pathname === window.location.pathname;
+  }
 }

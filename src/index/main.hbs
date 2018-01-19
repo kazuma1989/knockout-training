@@ -1,10 +1,12 @@
 {{#> ../layout title='Knockout.js app'}}
 
+<h1 class="page-header">Index page</h1>
+
 <div id="root"></div>
 
 <p>First name: <strong data-bind="text: firstName"></strong></p>
 <p>Last name: <strong data-bind="text: lastName, click: handleClick"></strong></p>
 
-<img data-bind="attr: {src: filename()}">
+<img data-bind="attr: { src: filename() }">
 
 {{/../layout}}

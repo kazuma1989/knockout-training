@@ -9,13 +9,13 @@
         <span class="icon-bar"></span>
       </button>
 
-      <a class="navbar-brand" href="#">Knockout.js</a>
+      <a class="navbar-brand" href="/">Knockout.js</a>
     </div>
 
     <div id="navbar" class="collapse navbar-collapse">
       <ul class="nav navbar-nav navbar-right">
-        <li class="active"><a href="/">Index</a></li>
-        <li><a href="/another.html">Another</a></li>
+        <li data-bind="css: { active: isActive('/') }"><a href="/">Index</a></li>
+        <li data-bind="css: { active: isActive('/another.html') }"><a href="/another.html">Another</a></li>
       </ul>
     </div>
 
