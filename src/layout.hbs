@@ -12,11 +12,13 @@
       <script src="//oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
     <![endif]-->
   </head>
-  <body style="padding-top: 50px">
+  <body>
 
-    {{> ./navbar}}
+    <div id="navbar" style="height: 50px">
+      {{> ./navbar}}
+    </div>
 
-    <div class="container">
+    <div id="main" class="container">
       {{> @partial-block}}
     </div>
 
