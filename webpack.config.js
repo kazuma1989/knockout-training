@@ -40,7 +40,7 @@ module.exports = {
       {
         // https://github.com/webpack-contrib/less-loader/issues/51
         // https://github.com/survivejs/react-boilerplate/issues/1#issuecomment-217727545
-        test: /node_modules.+\.less$/,
+        test: /\.less$/,
         loader: ExtractTextPlugin.extract(
           'style-loader',
           'css-loader?sourceMap!less-loader?sourceMap',

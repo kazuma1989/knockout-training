@@ -1,7 +1,7 @@
 import 'es5-polyfill';
 import 'knockout';
 import jQuery from 'jquery';
-import 'bootstrap/less/bootstrap.less';
+import './bootstrap-custom.less';
 
 // Bootstrap@3 needs jQuery exposed globally.
 // To avoid writing 'jQuery' in webpack.config.js and keeping global jQuery exposed,
