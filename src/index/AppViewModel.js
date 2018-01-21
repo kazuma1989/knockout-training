@@ -23,8 +23,6 @@ export default class AppViewModel {
   }
 
   handleClick() {
-    $('#root').text('HELLO WORLD');
-
     const currentName = this.lastName();
     this.lastName(currentName.toUpperCase());
   }

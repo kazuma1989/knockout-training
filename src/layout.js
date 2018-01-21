@@ -1,10 +1,12 @@
 import ko from 'knockout';
-import Navbar from './navbar';
+import Navbar from './Navbar';
 
 // Activates knockout.js
 export function applyBindings(app) {
   const navbar = new Navbar();
   ko.applyBindings(navbar, document.getElementById('navbar'));
 
-  ko.applyBindings(app, document.getElementById('main'));
+  if (app) {
+    ko.applyBindings(app, document.getElementById('main'));
+  }
 }

@@ -1,5 +1,5 @@
 import { applyBindings } from '../layout';
-import AppViewModel from '../common/AppViewModel';
+import AppViewModel from './AppViewModel';
 import icon from './icon.png';
 
 // Activates knockout.js
