@@ -1,9 +1,58 @@
 {
-  "posts": [
-    { "id": 1, "title": "json-server", "author": "typicode" }
-  ],
-  "comments": [
-    { "id": 1, "body": "some comment", "postId": 1 }
-  ],
-  "profile": { "name": "typicode" }
+  "panels": [
+    {
+      "id": 1,
+      "name": "John Doe",
+      "gender": "Male",
+      "telephone": "(+00) 00-1234-5678",
+      "email": "email@example.com",
+      "supports": [
+        {
+          "title": "TITLE",
+          "content": "CONTENT",
+          "by": "ABC",
+          "xxx": "XXX"
+        },
+        {
+          "title": "TITLE",
+          "content": "CONTENT",
+          "by": "ABC",
+          "xxx": "XXX"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "John Doe",
+      "gender": "Male",
+      "telephone": "(+00) 00-1234-5678",
+      "email": "email@example.com",
+      "supports": [
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Jane Doe",
+      "gender": "Female",
+      "telephone": "(+00) 00-1234-5678",
+      "email": "email2@example.com",
+      "supports": [
+      ]
+    },
+    {
+      "id": 4,
+      "name": "John Doe",
+      "gender": "Male",
+      "telephone": "(+00) 00-1234-5678",
+      "email": "email@example.com",
+      "supports": [
+        {
+          "title": "TITLE",
+          "content": "CONTENT",
+          "by": "ABC",
+          "xxx": "XXX"
+        }
+      ]
+    }
+  ]
 }

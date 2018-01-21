@@ -7,7 +7,7 @@
       <div class="col-sm-4">
         <label class="col-sm-3 control-label">Name</label>
         <div class="col-sm-9">
-          <p class="form-control-static" data-bind="text: JSON.stringify(data())">John Doe</p>
+          <p class="form-control-static">John Doe</p>
         </div>
       </div>
 
@@ -26,17 +26,20 @@
   </ul>
 
   <p class="text-right" style="margin-top: 10px">
-    <span class="btn-group" role="group" aria-label="...">
-    <button type="button" class="btn btn-default">Left</button>
-    <button type="button" class="btn btn-default">Middle</button>
-    <button type="button" class="btn btn-default">Right</button>
-  </span>
+    <span class="btn-group">
+      <label class="btn btn-default" data-bind="css: { active: withSupports }">
+        <input type="checkbox" autocomplete="off" data-bind="checked: withSupports" style="display: none"> With supports
+      </label>
+      <label class="btn btn-default" data-bind="css: { active: withErrors }">
+        <input type="checkbox" autocomplete="off" data-bind="checked: withErrors" style="display: none"> With errors
+      </label>
+    </span>
   </p>
 
-  <div data-bind="foreach: list">
-    <div class="panel panel-default" data-bind="css: { 'panel-primary': $index() == 0, 'panel-info': $index() == 1 }">
+  <div data-bind="foreach: panels">
+    <div class="panel panel-default" data-bind="visible: !$root.filterOut($data), css: { 'panel-primary': isPrimary, 'panel-info': isSecondary }">
       <div class="panel-heading">
-        <h3 class="panel-title">Panel title</h3>
+        <h3 class="panel-title">Panel (<span data-bind="text: id"></span>)</h3>
       </div>
       <div class="panel-body">
         <table class="table">
@@ -51,54 +54,29 @@
 
           <thead>
             <tr>
-              <td>John Doe</td>
-              <td>Male</td>
-              <td>(+00) 00-1234-5678</td>
-              <td>email@example.com</td>
+              <td data-bind="text: name"></td>
+              <td data-bind="text: gender"></td>
+              <td data-bind="text: telephone"></td>
+              <td data-bind="text: email"></td>
             </tr>
           </thead>
         </table>
 
-        <ul class="list-group col-sm-10">
+        <ul class="list-group col-sm-10" data-bind="foreach: supports">
           <li class="list-group-item">
             <div class="row">
               <div class="col-sm-6">
-                <h5 style="font-weight: bold; margin-top: 0">Title</h5>
-                <p>content</p>
+                <h5 style="font-weight: bold; margin-top: 0" data-bind="text: title"></h5>
+                <p data-bind="text: content"></p>
               </div>
 
               <div class="col-sm-6">
                 <dl class="dl-horizontal" style="margin-left: -60px">
                   <dt>Taken over by</dt>
-                  <dd>ABC</dd>
+                  <dd data-bind="text: by"></dd>
 
                   <dt>xxx</dt>
-                  <dd>xxx</dd>
-
-                  <dt>xxx</dt>
-                  <dd>xxx</dd>
-                </dl>
-              </div>
-            </div>
-          </li>
-
-          <li class="list-group-item">
-            <div class="row">
-              <div class="col-sm-6">
-                <h5 style="font-weight: bold; margin-top: 0">Title</h5>
-                <p>content</p>
-              </div>
-
-              <div class="col-sm-6">
-                <dl class="dl-horizontal" style="margin-left: -60px">
-                  <dt>Taken over by</dt>
-                  <dd>ABC</dd>
-
-                  <dt>xxx</dt>
-                  <dd>xxx</dd>
-
-                  <dt>xxx</dt>
-                  <dd>xxx</dd>
+                  <dd data-bind="text: xxx"></dd>
                 </dl>
               </div>
             </div>

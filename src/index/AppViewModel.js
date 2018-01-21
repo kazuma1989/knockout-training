@@ -1,29 +1,28 @@
-import ko from 'knockout';
-import $ from 'jquery';
+import { observable, computed } from 'knockout';
+import { getJSON } from 'jquery';
 
 // This is a simple *viewmodel* - JavaScript that defines the data and behavior of your UI
 export default class AppViewModel {
   constructor() {
-    this.firstName = ko.observable('Bert');
-    this.lastName = ko.observable('Bertington');
-
-    this.filename = ko.observable();
-
-    this.list = [
-      { firstName: 'Bert', lastName: 'Bertington' },
-      { firstName: 'Charles', lastName: 'Charlesforth' },
-      { firstName: 'Denise', lastName: 'Dentiste' },
-      { firstName: 'Denise', lastName: 'Dentiste' },
-    ];
-
-    this.data = ko.observable();
-    $.getJSON('/api/comments/1', data => {
-      this.data(data);
+    this.panels = observable();
+    getJSON('/api/panels', panels => {
+      panels.forEach(panel => {
+        panel.isPrimary = panel.id === 1;
+        panel.isSecondary = panel.id === 2;
+      });
+      this.panels(panels);
     });
+
+    this.withSupports = observable(false);
+    this.withErrors = observable(false);
   }
 
-  handleClick() {
-    const currentName = this.lastName();
-    this.lastName(currentName.toUpperCase());
+  filterOut(panel) {
+    const isFilteringOn = this.withSupports();
+    if (isFilteringOn) {
+      return panel.supports.length === 0;
+    } else {
+      return false;
+    }
   }
 }
