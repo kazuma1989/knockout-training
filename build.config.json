@@ -5,9 +5,13 @@
   },
   "page": {
     "exclude": [
-      "common"
+      "common",
+      "ltie9"
     ]
   },
+  "copy": [
+    "ltie9"
+  ],
   "proxy": {
     "/api": "http://localhost:3000"
   }

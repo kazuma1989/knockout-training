@@ -3,6 +3,7 @@ const { optimize: { CommonsChunkPlugin } } = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const config = require('./build.config');
 
 const isProduction = process.env.NODE_ENV === 'production';
@@ -93,8 +94,10 @@ module.exports = {
       name: 'manifest',
       minChunks: Infinity,
     }),
-    new CleanWebpackPlugin([distDir])
-  ].concat(pages.map(page =>
+    new CopyWebpackPlugin(config.copy.map(path => `${srcDir}/${path}`)),
+  ].concat(
+    isProduction ? [ new CleanWebpackPlugin([`${distDir}/*.*`]) ] : []
+  ).concat(pages.map(page =>
     new HtmlWebpackPlugin({
       filename: `${page}.html`,
       template: `${srcDir}/${page}/main.hbs`,

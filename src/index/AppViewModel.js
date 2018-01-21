@@ -1,4 +1,4 @@
-import { observable, computed } from 'knockout';
+import { observable } from 'knockout';
 import { getJSON } from 'jquery';
 
 // This is a simple *viewmodel* - JavaScript that defines the data and behavior of your UI
