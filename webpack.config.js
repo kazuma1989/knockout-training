@@ -78,12 +78,7 @@ module.exports = {
   devServer: {
     open: true,
     compress: true,
-    proxy: {
-      '/api': {
-        target: 'http://localhost:3000',
-        pathRewrite: { '^/api': '' }
-      }
-    },
+    proxy: config.proxy,
     // Expose the dev server to the internet
     host: process.env.HOST || '0.0.0.0',
     disableHostCheck: true,

@@ -6,7 +6,7 @@
   "scripts": {
     "start": "concurrently --kill-others \"yarn serve\" \"yarn stub\"",
     "serve": "webpack-dev-server",
-    "stub": "json-server --watch --port=3000 ./stub/data.json",
+    "stub": "json-server ./stub/data.json --config ./stub/config.json",
     "serve:dist": "serve -s ./dist",
     "build": "cross-env NODE_ENV=production webpack"
   },
