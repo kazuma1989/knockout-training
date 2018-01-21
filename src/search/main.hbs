@@ -4,26 +4,42 @@
 
   <form class="form-horizontal" data-bind="submit: search">
     <div class="row form-group">
-      <div class="col-sm-4">
+      <div class="col-sm-4" data-bind="css: { 'has-error': name.dirty() && name.invalid() }">
         <label class="col-sm-3 control-label">Name</label>
         <div class="col-sm-9">
-          <input class="form-control" data-bind="value: name">
+          <input tabindex="1" class="form-control" data-bind="textInput: name, attr: { title: name.errorMessage }">
         </div>
       </div>
 
-      <div class="col-sm-4">
+      <div class="col-sm-4" data-bind="css: { 'has-error': email.dirty() && email.invalid() }">
         <label class="col-sm-3 control-label">Email</label>
         <div class="col-sm-9">
-          <input class="form-control" data-bind="value: email">
+          <input tabindex="2" class="form-control" data-bind="textInput: email, attr: { title: email.errorMessage }">
         </div>
       </div>
     </div>
 
     <div class="row form-group">
       <div class="col-sm-2 col-sm-offset-10">
-        <button type="submit" class="btn btn-default">Search</button>
+        <button tabindex="3" type="submit" class="btn btn-primary" data-bind="enable: isValid()">Search</button>
       </div>
     </div>
   </form>
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+      </tr>
+    </thead>
+
+    <tbody data-bind="foreach: data">
+      <tr>
+        <td data-bind="text: name"></td>
+        <td data-bind="text: id"></td>
+      </tr>
+    </tbody>
+  </table>
 
   {{/../layout}}
