@@ -8,6 +8,18 @@ export default class AppViewModel {
     this.lastName = ko.observable('Bertington');
 
     this.filename = ko.observable();
+
+    this.list = [
+      { firstName: 'Bert', lastName: 'Bertington' },
+      { firstName: 'Charles', lastName: 'Charlesforth' },
+      { firstName: 'Denise', lastName: 'Dentiste' },
+      { firstName: 'Denise', lastName: 'Dentiste' },
+    ];
+
+    this.data = ko.observable();
+    $.getJSON('/api/comments/1', data => {
+      this.data(data);
+    });
   }
 
   handleClick() {

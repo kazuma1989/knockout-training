@@ -1,12 +1,111 @@
 {{#> ../layout title='Knockout.js app'}}
 
-<h1 class="page-header">Index page</h1>
+  <h1 class="page-header">Index page</h1>
 
-<div id="root"></div>
+  <div class="form-horizontal">
+    <div class="row form-group">
+      <div class="col-sm-4">
+        <label class="col-sm-3 control-label">Name</label>
+        <div class="col-sm-9">
+          <p class="form-control-static" data-bind="text: JSON.stringify(data())">John Doe</p>
+        </div>
+      </div>
 
-<p>First name: <strong data-bind="text: firstName"></strong></p>
-<p>Last name: <strong data-bind="text: lastName, click: handleClick"></strong></p>
+      <div class="col-sm-4">
+        <label class="col-sm-3 control-label">Email</label>
+        <div class="col-sm-9">
+          <p class="form-control-static">email@example.com</p>
+        </div>
+      </div>
+    </div>
+  </div>
 
-<img data-bind="attr: { src: filename() }">
+  <ul class="nav nav-tabs">
+    <li role="presentation" class="active"><a href="#">Home</a></li>
+    <li role="presentation"><a href="#">Profile</a></li>
+  </ul>
 
-{{/../layout}}
+  <p class="text-right" style="margin-top: 10px">
+    <span class="btn-group" role="group" aria-label="...">
+    <button type="button" class="btn btn-default">Left</button>
+    <button type="button" class="btn btn-default">Middle</button>
+    <button type="button" class="btn btn-default">Right</button>
+  </span>
+  </p>
+
+  <div data-bind="foreach: list">
+    <div class="panel panel-default" data-bind="css: { 'panel-primary': $index() == 0, 'panel-info': $index() == 1 }">
+      <div class="panel-heading">
+        <h3 class="panel-title">Panel title</h3>
+      </div>
+      <div class="panel-body">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Gender</th>
+              <th>Telephone</th>
+              <th>Email</th>
+            </tr>
+          </thead>
+
+          <thead>
+            <tr>
+              <td>John Doe</td>
+              <td>Male</td>
+              <td>(+00) 00-1234-5678</td>
+              <td>email@example.com</td>
+            </tr>
+          </thead>
+        </table>
+
+        <ul class="list-group col-sm-10">
+          <li class="list-group-item">
+            <div class="row">
+              <div class="col-sm-6">
+                <h5 style="font-weight: bold; margin-top: 0">Title</h5>
+                <p>content</p>
+              </div>
+
+              <div class="col-sm-6">
+                <dl class="dl-horizontal" style="margin-left: -60px">
+                  <dt>Taken over by</dt>
+                  <dd>ABC</dd>
+
+                  <dt>xxx</dt>
+                  <dd>xxx</dd>
+
+                  <dt>xxx</dt>
+                  <dd>xxx</dd>
+                </dl>
+              </div>
+            </div>
+          </li>
+
+          <li class="list-group-item">
+            <div class="row">
+              <div class="col-sm-6">
+                <h5 style="font-weight: bold; margin-top: 0">Title</h5>
+                <p>content</p>
+              </div>
+
+              <div class="col-sm-6">
+                <dl class="dl-horizontal" style="margin-left: -60px">
+                  <dt>Taken over by</dt>
+                  <dd>ABC</dd>
+
+                  <dt>xxx</dt>
+                  <dd>xxx</dd>
+
+                  <dt>xxx</dt>
+                  <dd>xxx</dd>
+                </dl>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  {{/../layout}}
