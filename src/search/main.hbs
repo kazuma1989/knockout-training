@@ -4,24 +4,33 @@
 
   <form class="form-horizontal" data-bind="submit: search">
     <div class="row form-group">
-      <div class="col-sm-4" data-bind="css: { 'has-error': name.dirty() && name.invalid() }">
+      <div class="col-sm-4" data-bind="css: { 'has-error': !id.pristine() && !id.valid() }">
+        <label class="col-sm-3 control-label">ID</label>
+        <div class="col-sm-9">
+          <input tabindex="1" class="form-control" data-bind="textInput: id, attr: { title: id.errorMessage }">
+        </div>
+      </div>
+    </div>
+
+    <div class="row form-group">
+      <div class="col-sm-4" data-bind="css: { 'has-error': !name.pristine() && !name.valid() }">
         <label class="col-sm-3 control-label">Name</label>
         <div class="col-sm-9">
-          <input tabindex="1" class="form-control" data-bind="textInput: name, attr: { title: name.errorMessage }">
+          <input tabindex="2" class="form-control" data-bind="textInput: name, attr: { title: name.errorMessage }">
         </div>
       </div>
 
-      <div class="col-sm-4" data-bind="css: { 'has-error': email.dirty() && email.invalid() }">
+      <div class="col-sm-4" data-bind="css: { 'has-error': !email.pristine() && !email.valid() }">
         <label class="col-sm-3 control-label">Email</label>
         <div class="col-sm-9">
-          <input tabindex="2" class="form-control" data-bind="textInput: email, attr: { title: email.errorMessage }">
+          <input tabindex="3" class="form-control" data-bind="textInput: email, attr: { title: email.errorMessage }">
         </div>
       </div>
     </div>
 
     <div class="row form-group">
       <div class="col-sm-2 col-sm-offset-10">
-        <button tabindex="3" type="submit" class="btn btn-primary" data-bind="enable: isValid()">Search</button>
+        <button tabindex="4" type="submit" class="btn btn-primary" data-bind="enable: id.valid() || (name.valid() && email.valid())">Search</button>
       </div>
     </div>
   </form>
@@ -34,7 +43,7 @@
       </tr>
     </thead>
 
-    <tbody data-bind="foreach: data">
+    <tbody data-bind="foreach: customers">
       <tr>
         <td data-bind="text: name"></td>
         <td data-bind="text: id"></td>

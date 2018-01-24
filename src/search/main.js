@@ -1,61 +1,80 @@
-import { observable, extenders } from 'knockout';
+import { observable, extenders, computed } from 'knockout';
 import { getJSON } from 'jquery';
 import { applyBindings } from '../layout';
 
 extenders.validate = (target, { message, validator }) => {
-  // detect dirty once
-  target.dirty = observable(false);
+  // detect pristine once
+  target.pristine = observable(true);
   const subscription = target.subscribe(() => {
     subscription.dispose();
-    target.dirty(true);
+    target.pristine(false);
   });
 
-  target.invalid = observable(false);
-  target.errorMessage = observable('');
-
-  const validate = newValue => {
-    const isValid = validator(newValue);
-    target.invalid(!isValid);
-    if (isValid) {
-      target.errorMessage('');
-    } else {
-      target.errorMessage(message);
-    }
-  };
-
-  const currentValue = target();
-  validate(currentValue);
-
-  target.subscribe(validate);
+  target.valid = observable(false);
+  target.errorMessage = computed(() => target.valid() ? '' : message);
+  target.subscribe(validator);
 
   return target;
 };
 
 class AppViewModel {
   constructor() {
+    this.id = observable().extend({
+      validate: {
+        message: 'Invalid id',
+        validator: () => this.validateId()
+      }
+    });
+
     this.name = observable().extend({
       validate: {
-        message: 'Required',
-        validator: value => value && value.trim() ? true : false
+        message: 'Invalid name',
+        validator: () => this.validateProfile()
       }
     });
+
     this.email = observable().extend({
       validate: {
-        message: 'Required',
-        validator: value => value && value.trim() ? true : false
+        message: 'Invalid email',
+        validator: () => this.validateProfile()
       }
     });
 
-    this.data = observable();
+    this.customers = observable();
   }
 
-  isValid() {
-    return !this.name.invalid() && !this.email.invalid();
+  validateId() {
+    const id = this.id();
+    if (id && id.trim()) {
+      this.id.valid(true);
+    }
+    else {
+      this.id.valid(false);
+    }
+  }
+
+  validateProfile() {
+    const name = this.name();
+    if (name && name.trim()) {
+      this.name.valid(true);
+      this.email.valid(true);
+    }
+    else {
+      const email = this.email();
+      if (email && email.trim()) {
+        this.name.valid(true);
+        this.email.valid(true);
+      }
+      else {
+        this.name.valid(false);
+        this.email.valid(false);
+      }
+    }
   }
 
   search() {
-    getJSON('/api/customers', { q: this.name() }, data => {
-      this.data(data);
+    getJSON('/api/customers', { q: this.name() }, customers => {
+      this.customers(customers);
     });
   }
 }
