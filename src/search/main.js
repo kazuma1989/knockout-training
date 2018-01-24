@@ -36,9 +36,19 @@ class AppViewModel {
         message: 'Invalid email',
       }
     });
+    const gender = observable().extend({
+      validate: {
+        message: 'Invalid gender',
+        validator: () => this.validateGender()
+      }
+    });
+    gender.subscribe(value => {
+      gender(value.toUpperCase());
+    });
     this.profile = pureComputed(() => ({
       name,
-      email
+      email,
+      gender,
     })).extend({
       validate: {
         message: 'Invalid profile',
@@ -59,25 +69,39 @@ class AppViewModel {
     }
   }
 
+  validateGender() {
+    const { gender } = this.profile();
+    switch (gender() && gender().trim()) {
+      case 'MALE':
+      case 'FEMALE':
+      case 'OTHER':
+      case '':
+      case undefined:
+        return true;
+      default:
+        return false;
+    }
+  }
+
   validateProfile() {
-    const { name, email } = this.profile();
+    const { name, email, gender } = this.profile();
+
     if (name() && name().trim()) {
       name.valid(true);
       email.valid(true);
-      return true;
     }
     else {
       if (email() && email().trim()) {
         name.valid(true);
         email.valid(true);
-        return true;
       }
       else {
         name.valid(false);
         email.valid(false);
-        return false;
       }
     }
+
+    return name.valid() && email.valid() && gender.valid();
   }
 
   search() {
