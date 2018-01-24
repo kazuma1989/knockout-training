@@ -1,4 +1,4 @@
-import { observable, extenders, pureComputed } from 'knockout';
+import { observable, extenders, pureComputed, toJS } from 'knockout';
 import { getJSON } from 'jquery';
 import { applyBindings } from '../layout';
 
@@ -10,41 +10,40 @@ extenders.validate = (target, { message, validator }) => {
     subscription.dispose();
   });
 
-  target.valid = observable(false);
+  target.valid = validator ? pureComputed(validator) : observable(false);
   target.errorMessage = pureComputed(() => target.valid() ? '' : message);
-  target.subscribe(validator);
 
   return target;
 };
 
 class AppViewModel {
   constructor() {
-    this.id = observable('initial').extend({
+    const id = observable().extend({
       validate: {
-        message: 'Invalid id',
+        message: 'Invalid ID',
         validator: () => this.validateId()
       }
     });
-    this.validateId();
+    this.id = id;
 
-    this.profile = {
-      name: observable().extend({
-        validate: {
-          message: 'Invalid name',
-          validator: () => this.validateProfile()
-        }
-      }),
-      email: observable().extend({
-        validate: {
-          message: 'Invalid email',
-          validator: () => this.validateProfile()
-        }
-      })
-    };
-    this.validateProfile();
-    this.profile.valid = pureComputed(() => {
-      const { name, email } = this.profile;
-      return name.valid() && email.valid();
+    const name = observable().extend({
+      validate: {
+        message: 'Invalid name',
+      }
+    });
+    const email = observable().extend({
+      validate: {
+        message: 'Invalid email',
+      }
+    });
+    this.profile = pureComputed(() => ({
+      name,
+      email
+    })).extend({
+      validate: {
+        message: 'Invalid profile',
+        validator: () => this.validateProfile()
+      }
     });
 
     this.customers = observable();
@@ -53,33 +52,37 @@ class AppViewModel {
   validateId() {
     const id = this.id();
     if (id && id.trim()) {
-      this.id.valid(true);
+      return true;
     }
     else {
-      this.id.valid(false);
+      return false;
     }
   }
 
   validateProfile() {
-    const { name, email } = this.profile;
+    const { name, email } = this.profile();
     if (name() && name().trim()) {
       name.valid(true);
       email.valid(true);
+      return true;
     }
     else {
       if (email() && email().trim()) {
         name.valid(true);
         email.valid(true);
+        return true;
       }
       else {
         name.valid(false);
         email.valid(false);
+        return false;
       }
     }
   }
 
   search() {
-    getJSON('/api/customers', { q: this.profile.name() }, customers => {
+    const { profile } = toJS(this);
+    getJSON('/api/customers', { q: profile.name }, customers => {
       this.customers(customers);
     });
   }
