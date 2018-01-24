@@ -12,7 +12,7 @@
       </div>
     </div>
 
-    <div class="row form-group">
+    <div class="row form-group" data-bind="with: profile">
       <div class="col-sm-4" data-bind="css: { 'has-error': !name.pristine() && !name.valid() }">
         <label class="col-sm-3 control-label">Name</label>
         <div class="col-sm-9">
@@ -30,7 +30,7 @@
 
     <div class="row form-group">
       <div class="col-sm-2 col-sm-offset-10">
-        <button tabindex="4" type="submit" class="btn btn-primary" data-bind="enable: id.valid() || (name.valid() && email.valid())">Search</button>
+        <button tabindex="4" type="submit" class="btn btn-primary" data-bind="enable: id.valid() || profile.valid()">Search</button>
       </div>
     </div>
   </form>
