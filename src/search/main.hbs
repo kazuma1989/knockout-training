@@ -6,9 +6,11 @@
     <div class="form-group">
       <div class="col-sm-8" data-bind="css: { 'has-error': !id.pristine() && !id.valid() }">
         <div class="row">
-          <label class="col-sm-2 control-label">ID</label>
+          <label class="col-sm-2 control-label">
+            ID
+          </label>
           <div class="col-sm-10">
-            <input tabindex="1" type="text" class="form-control" data-bind="textInput: id, attr: { title: id.errorMessage }">
+            <input tabindex="1" type="text" class="form-control" data-bind="textInput: id, attr: { title: (id.error().required || '') + (id.error().length || '') }">
           </div>
         </div>
       </div>
@@ -17,7 +19,9 @@
     <div class="form-group" data-bind="with: profile">
       <div class="col-sm-4" data-bind="css: { 'has-error': !name.pristine() && !name.valid() }">
         <div class="row">
-          <label class="col-sm-4 control-label">Name</label>
+          <label class="col-sm-4 control-label">
+            Name
+          </label>
           <div class="col-sm-8">
             <input tabindex="2" type="text" class="form-control" data-bind="textInput: name, attr: { title: name.errorMessage }">
           </div>
@@ -26,7 +30,9 @@
 
       <div class="col-sm-4" data-bind="css: { 'has-error': !email.pristine() && !email.valid() }">
         <div class="row">
-          <label class="col-sm-4 control-label">Email</label>
+          <label class="col-sm-4 control-label">
+            Email
+          </label>
           <div class="col-sm-8">
             <input tabindex="3" type="email" class="form-control" data-bind="textInput: email, attr: { title: email.errorMessage }">
           </div>
@@ -35,7 +41,9 @@
 
       <div class="col-sm-4" data-bind="css: { 'has-error': !gender.pristine() && !gender.valid() }">
         <div class="row">
-          <label class="col-sm-4 control-label">Gender</label>
+          <label class="col-sm-4 control-label">
+            Gender
+          </label>
           <div class="col-sm-8">
             <input tabindex="3" type="text" class="form-control" data-bind="textInput: gender, attr: { title: gender.errorMessage }">
           </div>
@@ -50,7 +58,7 @@
     </div>
   </form>
 
-  <table class="table">
+  <table class="table" data-bind="if: customers">
     <thead>
       <tr>
         <th>Name</th>

@@ -1,5 +1,5 @@
 import 'es5-polyfill';
-import 'knockout';
+import { bindingHandlers } from 'knockout';
 import jQuery from 'jquery';
 import './bootstrap-custom.less';
 
@@ -11,3 +11,7 @@ window.jQuery = jQuery;
 require('bootstrap/js/transition.js');
 require('bootstrap/js/collapse.js');
 window.jQuery = undefined;
+
+if (window.ltie9) {
+  bindingHandlers.textInput = bindingHandlers.value;
+}

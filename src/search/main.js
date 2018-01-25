@@ -15,14 +15,24 @@ extenders.validate = (target, { message, validator }) => {
 
   return target;
 };
+extenders.validate2 = (target, validator) => {
+  // detect pristine once
+  target.pristine = observable(true);
+  const subscription = target.subscribe(() => {
+    target.pristine(false);
+    subscription.dispose();
+  });
+
+  target.error = validator ? pureComputed(validator) : observable({});
+  target.valid = pureComputed(() => Object.keys(target.error()).length === 0);
+
+  return target;
+};
 
 class AppViewModel {
   constructor() {
     const id = observable().extend({
-      validate: {
-        message: 'Invalid ID',
-        validator: () => this.validateId()
-      }
+      validate2: () => this.validateId()
     });
     this.id = id;
 
@@ -60,12 +70,24 @@ class AppViewModel {
   }
 
   validateId() {
-    const id = this.id();
-    if (id && id.trim()) {
-      return true;
+    const required = 'ID is required.';
+    const length = 'ID must be longer than 8 digits.';
+
+    const id = (this.id() || '').trim();
+    if (!id) {
+      return {
+        required
+      };
     }
     else {
-      return false;
+      if (id.length <= 7) {
+        return {
+          length
+        };
+      }
+      else {
+        return {};
+      }
     }
   }
 
