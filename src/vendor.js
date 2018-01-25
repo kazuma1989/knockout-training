@@ -12,6 +12,8 @@ require('bootstrap/js/transition.js');
 require('bootstrap/js/collapse.js');
 window.jQuery = undefined;
 
+// Replace textInput handler, fired every key types, to value handler, fired only when focus out
+// because of low IE8 performance.
 if (window.ltie9) {
   bindingHandlers.textInput = bindingHandlers.value;
 }

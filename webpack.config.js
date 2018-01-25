@@ -1,4 +1,5 @@
 const { readdirSync, statSync } = require('fs');
+const { resolve } = require('path');
 const { optimize: { CommonsChunkPlugin } } = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
@@ -8,19 +9,18 @@ const config = require('./build.config');
 
 const isProduction = process.env.NODE_ENV === 'production';
 
-const srcDir = `${__dirname}/${config.path.src}`;
-const distDir = `${__dirname}/${config.path.dist}`;
+const srcDir = resolve(__dirname, config.path.src);
+const distDir = resolve(__dirname, config.path.dist);
 const pages = readdirSync(srcDir)
   .filter(file => config.page.exclude.indexOf(file) === -1)
-  .filter(file => statSync(`${srcDir}/${file}`).isDirectory());
+  .filter(file => statSync(resolve(srcDir, file)).isDirectory());
 
 module.exports = {
-  entry: Object.assign(
-    {
-      vendor: `${srcDir}/vendor.js`,
+  entry: Object.assign({
+      vendor: resolve(srcDir, 'vendor.js')
     },
     ...pages.map(page => ({
-      [page]: `${srcDir}/${page}/main.js`
+      [page]: resolve(srcDir, page, 'main.js')
     }))
   ),
   output: {
@@ -28,8 +28,7 @@ module.exports = {
     filename: '[name].[chunkhash:8].js'
   },
   module: {
-    loaders: [
-      {
+    loaders: [{
         test: /\.css$/,
         exclude: /node_modules/,
         loaders: [
@@ -62,7 +61,7 @@ module.exports = {
         test: /\.js$/,
         exclude: /node_modules/,
         loader: 'babel-loader',
-        query:{
+        query: {
           presets: ['env'],
           plugins: [
             // Use import/export syntax with IE8
@@ -82,7 +81,6 @@ module.exports = {
   },
   devtool: isProduction ? 'source-map' : 'cheap-module-source-map',
   devServer: {
-    open: true,
     compress: true,
     proxy: config.proxy,
     // Expose the dev server to the internet
@@ -99,13 +97,15 @@ module.exports = {
       name: 'manifest',
       minChunks: Infinity,
     }),
-    new CopyWebpackPlugin(config.copy.map(path => `${srcDir}/${path}`)),
+    new CopyWebpackPlugin(config.copyFrom.map(path => resolve(srcDir, path))),
   ].concat(
-    isProduction ? [ new CleanWebpackPlugin([`${distDir}/*.*`]) ] : []
+    isProduction ? [
+      new CleanWebpackPlugin([resolve(distDir, '*.*')])
+    ] : []
   ).concat(pages.map(page =>
     new HtmlWebpackPlugin({
-      filename: `${page}.html`,
-      template: `${srcDir}/${page}/main.hbs`,
+      filename: page + '.html',
+      template: resolve(srcDir, page, 'main.hbs'),
       chunks: [
         'manifest',
         'vendor',

@@ -1,7 +1,7 @@
 {
   "path": {
-    "src": "src",
-    "dist": "dist"
+    "src": "./src",
+    "dist": "./dist"
   },
   "page": {
     "exclude": [
@@ -9,8 +9,8 @@
       "ltie9"
     ]
   },
-  "copy": [
-    "ltie9"
+  "copyFrom": [
+    "./ltie9"
   ],
   "proxy": {
     "/api": "http://localhost:3000"
