@@ -23,7 +23,7 @@
             Name
           </label>
           <div class="col-sm-8">
-            <input tabindex="2" type="text" class="form-control" data-bind="textInput: name, attr: { title: name.errorMessage }">
+            <input tabindex="2" type="text" class="form-control" data-bind="textInput: name, attr: { title: name.error().required || '' }">
           </div>
         </div>
       </div>
@@ -34,7 +34,7 @@
             Email
           </label>
           <div class="col-sm-8">
-            <input tabindex="3" type="email" class="form-control" data-bind="textInput: email, attr: { title: email.errorMessage }">
+            <input tabindex="3" type="email" class="form-control" data-bind="textInput: email, attr: { title: email.error().required || '' }">
           </div>
         </div>
       </div>
@@ -45,7 +45,7 @@
             Gender
           </label>
           <div class="col-sm-8">
-            <input tabindex="3" type="text" class="form-control" data-bind="textInput: gender, attr: { title: gender.errorMessage }">
+            <input tabindex="3" type="text" class="form-control" data-bind="textInput: gender, attr: { title: gender.error().unknown || '' }">
           </div>
         </div>
       </div>
@@ -57,6 +57,27 @@
       </div>
     </div>
   </form>
+
+  <div>
+    <div>
+      Errors:
+    </div>
+    <div>
+      ID <span data-bind="json: id.error"></span>
+    </div>
+    <div>
+      Name <span data-bind="json: profile().name.error"></span>
+    </div>
+    <div>
+      Email <span data-bind="json: profile().email.error"></span>
+    </div>
+    <div>
+      Gender <span data-bind="json: profile().gender.error"></span>
+    </div>
+    <div>
+      Profile <span data-bind="json: profile.error"></span>
+    </div>
+  </div>
 
   <div class="table-responsive">
     <table class="table" data-bind="if: customers">

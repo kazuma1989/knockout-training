@@ -1,21 +1,16 @@
 import { observable, extenders, pureComputed, toJS } from 'knockout';
+import { bindingHandlers, unwrap } from 'knockout';
 import { getJSON } from 'jquery';
 import { applyBindings } from '../layout';
 
-extenders.validate = (target, { message, validator }) => {
-  // detect pristine once
-  target.pristine = observable(true);
-  const subscription = target.subscribe(() => {
-    target.pristine(false);
-    subscription.dispose();
-  });
-
-  target.valid = validator ? pureComputed(validator) : observable(false);
-  target.errorMessage = pureComputed(() => target.valid() ? '' : message);
-
-  return target;
+bindingHandlers.json = {
+  update: (element, valueAccessor) => {
+    const value = unwrap(valueAccessor());
+    element.innerText = JSON.stringify(value);
+  }
 };
-extenders.validate2 = (target, validator) => {
+
+extenders.validate = (target, validator) => {
   // detect pristine once
   target.pristine = observable(true);
   const subscription = target.subscribe(() => {
@@ -32,25 +27,18 @@ extenders.validate2 = (target, validator) => {
 class AppViewModel {
   constructor() {
     const id = observable().extend({
-      validate2: () => this.validateId()
+      validate: () => this.validateId()
     });
     this.id = id;
 
     const name = observable().extend({
-      validate: {
-        message: 'Invalid name',
-      }
+      validate: null
     });
     const email = observable().extend({
-      validate: {
-        message: 'Invalid email',
-      }
+      validate: null
     });
     const gender = observable().extend({
-      validate: {
-        message: 'Invalid gender',
-        validator: () => this.validateGender()
-      }
+      validate: () => this.validateGender()
     });
     gender.subscribe(value => {
       gender(value.toUpperCase());
@@ -60,10 +48,7 @@ class AppViewModel {
       email,
       gender,
     })).extend({
-      validate: {
-        message: 'Invalid profile',
-        validator: () => this.validateProfile()
-      }
+      validate: () => this.validateProfile()
     });
 
     this.customers = observable();
@@ -75,19 +60,13 @@ class AppViewModel {
 
     const id = (this.id() || '').trim();
     if (!id) {
-      return {
-        required
-      };
+      return { required };
+    }
+    else if (id.length <= 7) {
+      return { length };
     }
     else {
-      if (id.length <= 7) {
-        return {
-          length
-        };
-      }
-      else {
-        return {};
-      }
+      return {};
     }
   }
 
@@ -99,9 +78,11 @@ class AppViewModel {
       case 'OTHER':
       case '':
       case undefined:
-        return true;
+        return {};
       default:
-        return false;
+        return {
+          unknown: 'Unknown gender'
+        };
     }
   }
 
@@ -109,21 +90,21 @@ class AppViewModel {
     const { name, email, gender } = this.profile();
 
     if (name() && name().trim()) {
-      name.valid(true);
-      email.valid(true);
+      name.error({});
+      email.error({});
+    }
+    else if (email() && email().trim()) {
+      name.error({});
+      email.error({});
     }
     else {
-      if (email() && email().trim()) {
-        name.valid(true);
-        email.valid(true);
-      }
-      else {
-        name.valid(false);
-        email.valid(false);
-      }
+      const required = 'Either name or email is required';
+      name.error({ required });
+      email.error({ required });
     }
 
-    return name.valid() && email.valid() && gender.valid();
+    const isValid = name.valid() && email.valid() && gender.valid();
+    return isValid ? {} : { error: 'Something goes wrong' };
   }
 
   search() {
