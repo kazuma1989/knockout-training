@@ -18,7 +18,17 @@ extenders.validate = (target, validator) => {
     subscription.dispose();
   });
 
-  target.error = validator ? pureComputed(validator) : observable({});
+  const _error = observable({});
+  if (validator) {
+    target.error = pureComputed({
+      read: () => Object.assign({}, validator(), _error()),
+      write: value => _error(value)
+    });
+  }
+  else {
+    target.error = _error;
+  }
+
   target.valid = pureComputed(() => Object.keys(target.error()).length === 0);
 
   return target;
@@ -35,7 +45,7 @@ class AppViewModel {
       validate: null
     });
     const email = observable().extend({
-      validate: null
+      validate: () => this.validateEmail()
     });
     const gender = observable().extend({
       validate: () => this.validateGender()
@@ -67,6 +77,16 @@ class AppViewModel {
     }
     else {
       return {};
+    }
+  }
+
+  validateEmail() {
+    const { email } = this.profile();
+    if (email() && email().includes('@')) {
+      return {};
+    }
+    else {
+      return { format: 'Invalid format.' };
     }
   }
 
