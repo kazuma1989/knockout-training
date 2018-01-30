@@ -1,6 +1,7 @@
-import { observable, extenders, pureComputed, toJS } from 'knockout';
+import { observable, pureComputed, toJS } from 'knockout';
 import { bindingHandlers, unwrap } from 'knockout';
 import { getJSON } from 'jquery';
+import '../common/extend-validate';
 import { applyBindings } from '../layout';
 
 bindingHandlers.json = {
@@ -10,34 +11,10 @@ bindingHandlers.json = {
   }
 };
 
-extenders.validate = (target, validator) => {
-  // detect pristine once
-  target.pristine = observable(true);
-  const subscription = target.subscribe(() => {
-    target.pristine(false);
-    subscription.dispose();
-  });
-
-  const _error = observable({});
-  if (validator) {
-    target.error = pureComputed({
-      read: () => Object.assign({}, validator(), _error()),
-      write: value => _error(value)
-    });
-  }
-  else {
-    target.error = _error;
-  }
-
-  target.valid = pureComputed(() => Object.keys(target.error()).length === 0);
-
-  return target;
-};
-
 class AppViewModel {
   constructor() {
     const id = observable().extend({
-      validate: () => this.validateId()
+      validate: this.validateId
     });
     this.id = id;
 
@@ -45,10 +22,10 @@ class AppViewModel {
       validate: null
     });
     const email = observable().extend({
-      validate: () => this.validateEmail()
+      validate: this.validateEmail
     });
     const gender = observable().extend({
-      validate: () => this.validateGender()
+      validate: this.validateGender
     });
     gender.subscribe(value => {
       gender(value.toUpperCase());
@@ -58,31 +35,28 @@ class AppViewModel {
       email,
       gender,
     })).extend({
-      validate: () => this.validateProfile()
+      validate: this.validateProfile
     });
 
     this.customers = observable();
   }
 
-  validateId() {
-    const required = 'ID is required.';
-    const length = 'ID must be longer than 8 digits.';
-
-    const id = (this.id() || '').trim();
+  validateId(id) {
+    id = (id || '').trim();
     if (!id) {
-      return { required };
+      return { required: 'ID is required.' };
     }
     else if (id.length <= 7) {
-      return { length };
+      return { length: 'ID must be longer than 8 digits.' };
     }
     else {
       return {};
     }
   }
 
-  validateEmail() {
-    const { email } = this.profile();
-    if (email() && email().includes('@')) {
+  validateEmail(email) {
+    email = (email || '').trim();
+    if (!email || email.includes('@')) {
       return {};
     }
     else {
@@ -90,41 +64,50 @@ class AppViewModel {
     }
   }
 
-  validateGender() {
-    const { gender } = this.profile();
-    switch (gender() && gender().trim()) {
+  validateGender(gender) {
+    gender = (gender || '').trim();
+    switch (gender) {
       case 'MALE':
       case 'FEMALE':
       case 'OTHER':
       case '':
-      case undefined:
         return {};
+
       default:
-        return {
-          unknown: 'Unknown gender'
-        };
+        return { unknown: 'Unknown gender.' };
     }
   }
 
-  validateProfile() {
-    const { name, email, gender } = this.profile();
+  validateProfile(value, profile) {
+    const { name, email, gender } = profile();
 
-    if (name() && name().trim()) {
+    const nameValue = (value.name || '').trim();
+    const emailValue = (value.email || '').trim();
+    if (nameValue) {
       name.error({});
       email.error({});
     }
-    else if (email() && email().trim()) {
+    else if (emailValue) {
       name.error({});
       email.error({});
     }
     else {
-      const required = 'Either name or email is required';
+      const required = 'Either name or email is required.';
       name.error({ required });
       email.error({ required });
     }
 
-    const isValid = name.valid() && email.valid() && gender.valid();
-    return isValid ? {} : { error: 'Something goes wrong' };
+    const error = {};
+    if (!name.valid()) {
+      error.name = name.error();
+    }
+    if (!email.valid()) {
+      error.email = email.error();
+    }
+    if (!gender.valid()) {
+      error.gender = gender.error();
+    }
+    return error;
   }
 
   search() {

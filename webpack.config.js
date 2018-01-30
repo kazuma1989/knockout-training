@@ -101,16 +101,17 @@ module.exports = {
   ].concat(
     isProduction ? [
       new CleanWebpackPlugin([resolve(distDir, '*.*')])
-    ] : []
-  ).concat(pages.map(page =>
-    new HtmlWebpackPlugin({
-      filename: page + '.html',
-      template: resolve(srcDir, page, 'main.hbs'),
-      chunks: [
-        'manifest',
-        'vendor',
-        page
-      ]
-    })
-  )),
+    ] : [],
+    pages.map(page =>
+      new HtmlWebpackPlugin({
+        filename: page + '.html',
+        template: resolve(srcDir, page, 'main.hbs'),
+        chunks: [
+          'manifest',
+          'vendor',
+          page
+        ]
+      })
+    )
+  ),
 };
