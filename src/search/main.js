@@ -1,7 +1,6 @@
 import { observable, pureComputed, toJS } from 'knockout';
 import { bindingHandlers, unwrap } from 'knockout';
 import { getJSON } from 'jquery';
-import '../common/extend-validate';
 import { applyBindings } from '../layout';
 
 bindingHandlers.json = {

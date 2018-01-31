@@ -9,8 +9,14 @@
       "ltie9"
     ]
   },
+  "entry": {
+    "vendor": "vendor.js",
+    "page": {
+      "common": "common/extend-validate.js"
+    }
+  },
   "copyFrom": [
-    "./ltie9"
+    "ltie9"
   ],
   "proxy": {
     "/api": "http://localhost:3000"

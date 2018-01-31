@@ -5,28 +5,46 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+
+// Frequently changed values are seen in another config file.
 const config = require('./build.config');
 
+// Detect production mode.
 const isProduction = process.env.NODE_ENV === 'production';
 
+// Set up src and dist dirs.
 const srcDir = resolve(__dirname, config.path.src);
 const distDir = resolve(__dirname, config.path.dist);
+
+// Use directories in src as page names, except for excluded names.
 const pages = readdirSync(srcDir)
   .filter(file => config.page.exclude.indexOf(file) === -1)
   .filter(file => statSync(resolve(srcDir, file)).isDirectory());
 
+// Construct Webpack config.
 module.exports = {
+  // Entries.
+  // These JS and their dependencies are bundled into each JS.
   entry: Object.assign({
-      vendor: resolve(srcDir, 'vendor.js')
+      vendor: resolve(srcDir, config.entry.vendor)
     },
     ...pages.map(page => ({
-      [page]: resolve(srcDir, page, 'main.js')
+      [page]: [
+        resolve(srcDir, config.entry.page.common),
+        resolve(srcDir, page, 'main.js')
+      ]
     }))
   ),
+
+  // Outputs.
+  // Where to publish built files.
   output: {
     path: distDir,
     filename: '[name].[chunkhash:8].js'
   },
+
+  // Modules.
+  // Each loader for any extensions is used to understand "import 'foo.someext'".
   module: {
     loaders: [{
         test: /\.css$/,
@@ -79,16 +97,28 @@ module.exports = {
       },
     ]
   },
+
+  // Devtool.
+  // Define source map setting.
   devtool: isProduction ? 'source-map' : 'cheap-module-source-map',
+
+  // Dev server.
+  // Configure dev server behavior, which does not affect the production build.
   devServer: {
     compress: true,
     proxy: config.proxy,
-    // Expose the dev server to the internet
+
+    // Expose the dev server to the internet by following 2 config.
     host: process.env.HOST || '0.0.0.0',
     disableHostCheck: true,
   },
+
+  // Plugins.
+  // Define behaviors other than the loaders.
   plugins: [
+    // Extract CSS from JS to make separate CSS files.
     new ExtractTextPlugin('[name].[contenthash:8].css'),
+    // Bundle common JS files into "chunks" (bundled JS other than main.js).
     new CommonsChunkPlugin({
       name: 'vendor',
       minChunks: Infinity,
@@ -97,11 +127,14 @@ module.exports = {
       name: 'manifest',
       minChunks: Infinity,
     }),
+    // Copy static assets to dist.
     new CopyWebpackPlugin(config.copyFrom.map(path => resolve(srcDir, path))),
   ].concat(
     isProduction ? [
+      // Clean up dist contents.
       new CleanWebpackPlugin([resolve(distDir, '*.*')])
     ] : [],
+    // From main.hbs, generate a HTML for each page containing proper "script" tags.
     pages.map(page =>
       new HtmlWebpackPlugin({
         filename: page + '.html',
