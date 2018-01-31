@@ -3,7 +3,6 @@ const { resolve } = require('path');
 const { optimize: { CommonsChunkPlugin } } = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 // Frequently changed values are seen in another config file.
@@ -47,44 +46,29 @@ module.exports = {
   // Each loader for any extensions is used to understand "import 'foo.someext'".
   module: {
     loaders: [{
-        test: /\.css$/,
+        test: /\.(css|less)$/,
         exclude: /node_modules/,
         loaders: [
-          'style-loader',
-          'css-loader?modules'
+          'file-loader?name=[name].[hash:8].css',
+          'extract-loader',
+          'css-loader?sourceMap',
+          'less-loader?sourceMap',
         ]
       },
       {
-        // https://github.com/webpack-contrib/less-loader/issues/51
-        // https://github.com/survivejs/react-boilerplate/issues/1#issuecomment-217727545
-        test: /\.less$/,
-        loader: ExtractTextPlugin.extract(
-          'style-loader',
-          'css-loader?sourceMap!less-loader?sourceMap',
-        ),
-      },
-      {
         test: /\.(png|svg|jpe?g|gif)$/,
-        loader: 'file-loader',
+        loader: 'file-loader?name=[name].[hash:8].[ext]',
       },
       {
         test: /\.(woff|woff2|eot|ttf|otf)$/,
-        loader: 'file-loader',
+        loader: 'file-loader?name=[name].[hash:8].[ext]',
       },
       {
         test: /\.hbs$/,
         loaders: [
           'handlebars-loader',
           'extract-loader',
-          'html-loader?interpolate',
-        ]
-      },
-      {
-        test: /\.html$/,
-        loaders: [
-          'file-loader?name=[name].[ext]',
-          'extract-loader',
-          'html-loader?interpolate',
+          'html-loader?interpolate&attrs[]=img:src&attrs[]=link:href',
         ]
       },
       {
@@ -119,6 +103,10 @@ module.exports = {
   devServer: {
     compress: true,
     proxy: config.proxy,
+    stats: {
+      // Suppress too many chunks info output to the console.
+      chunks: false
+    },
 
     // Expose the dev server to the internet by following 2 config.
     host: process.env.HOST || '0.0.0.0',
@@ -128,8 +116,6 @@ module.exports = {
   // Plugins.
   // Define behaviors other than the loaders.
   plugins: [
-    // Extract CSS from JS to make separate CSS files.
-    new ExtractTextPlugin('[name].[contenthash:8].css'),
     // Bundle common JS files into "chunks" (bundled JS other than main.js).
     new CommonsChunkPlugin({
       name: 'vendor',

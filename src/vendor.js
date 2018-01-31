@@ -1,7 +1,6 @@
 import 'core-js';
 import { bindingHandlers } from 'knockout';
 import jQuery from 'jquery';
-import './bootstrap-custom.less';
 
 // Bootstrap@3 needs jQuery exposed globally.
 // To avoid writing 'jQuery' in webpack.config.js and keeping global jQuery exposed,
