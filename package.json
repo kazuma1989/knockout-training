@@ -12,7 +12,7 @@
   },
   "dependencies": {
     "bootstrap": "3",
-    "es5-polyfill": "^0.0.5",
+    "core-js": "^2.5.3",
     "jquery": "1",
     "knockout": "^3.5.0-beta"
   },

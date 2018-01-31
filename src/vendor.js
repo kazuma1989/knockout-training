@@ -1,4 +1,4 @@
-import 'es5-polyfill';
+import 'core-js';
 import { bindingHandlers } from 'knockout';
 import jQuery from 'jquery';
 import './bootstrap-custom.less';
