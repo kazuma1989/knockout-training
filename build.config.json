@@ -12,7 +12,7 @@
   "entry": {
     "vendor": "vendor.js",
     "page": {
-      "common": "common/extend-validate.js"
+      "common": "common.js"
     }
   },
   "copyFrom": [
