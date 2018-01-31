@@ -2,7 +2,7 @@ import { observable } from 'knockout';
 import { getJSON } from 'jquery';
 
 // This is a simple *viewmodel* - JavaScript that defines the data and behavior of your UI
-export default class AppViewModel {
+export default class Index {
   constructor() {
     this.panels = observable();
     getJSON('/api/panels', panels => {
@@ -21,7 +21,8 @@ export default class AppViewModel {
     const isFilteringOn = this.withSupports();
     if (isFilteringOn) {
       return panel.supports.length === 0;
-    } else {
+    }
+    else {
       return false;
     }
   }
