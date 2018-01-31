@@ -45,32 +45,59 @@ module.exports = {
   // Modules.
   // Each loader for any extensions is used to understand "import 'foo.someext'".
   module: {
-    loaders: [{
+    loaders: [
+      // Transpile LESS to CSS and output as a CSS file (not a <style> element).
+      {
         test: /\.(css|less)$/,
         exclude: /node_modules/,
         loaders: [
-          'file-loader?name=[name].[hash:8].css',
+          'file-loader?' + JSON.stringify({
+            name: '[name].[hash:8].css'
+          }),
           'extract-loader',
-          'css-loader?sourceMap',
-          'less-loader?sourceMap',
+          'css-loader?' + JSON.stringify({
+            sourceMap: true
+          }),
+          'less-loader?' + JSON.stringify({
+            sourceMap: true
+          }),
         ]
       },
+
+      // Copy static assets.
       {
         test: /\.(png|svg|jpe?g|gif)$/,
-        loader: 'file-loader?name=[name].[hash:8].[ext]',
+        loader: 'file-loader',
+        query: {
+          name: '[name].[hash:8].[ext]'
+        }
       },
       {
         test: /\.(woff|woff2|eot|ttf|otf)$/,
-        loader: 'file-loader?name=[name].[hash:8].[ext]',
+        loader: 'file-loader',
+        query: {
+          name: '[name].[hash:8].[ext]'
+        }
       },
+
+      // Understand interpolate syntax first, then handle with the templating system.
       {
         test: /\.hbs$/,
         loaders: [
           'handlebars-loader',
           'extract-loader',
-          'html-loader?interpolate&attrs[]=img:src&attrs[]=link:href',
+          'html-loader?' + JSON.stringify({
+            interpolate: true,
+            attrs: [
+              'img:src',
+              'link:href',
+            ]
+          })
         ]
       },
+
+      // Transpile JS (current syntax) to JS (old syntax).
+      // Some features (e.g. Array.prototype.forEach and so on) are still needed to be implemented with polyfills.
       {
         test: /\.js$/,
         exclude: /node_modules/,
@@ -81,11 +108,9 @@ module.exports = {
             // Use import/export syntax with IE8
             'transform-es2015-modules-commonjs',
             'transform-es3-modules-literals',
-
             // Use any names as members or properties with IE8
             'transform-es3-member-expression-literals',
             'transform-es3-property-literals',
-
             // Fix bugs in IE8
             'transform-jscript',
           ]
@@ -132,6 +157,7 @@ module.exports = {
       // Clean up dist contents.
       new CleanWebpackPlugin([resolve(distDir, '*.*')])
     ] : [],
+
     // From main.hbs, generate a HTML for each page containing proper "script" tags.
     pages.map(page =>
       new HtmlWebpackPlugin({
