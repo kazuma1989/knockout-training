@@ -73,7 +73,19 @@ module.exports = {
       },
       {
         test: /\.hbs$/,
-        loader: 'handlebars-loader',
+        loaders: [
+          'handlebars-loader',
+          'extract-loader',
+          'html-loader?interpolate',
+        ]
+      },
+      {
+        test: /\.html$/,
+        loaders: [
+          'file-loader?name=[name].[ext]',
+          'extract-loader',
+          'html-loader?interpolate',
+        ]
       },
       {
         test: /\.js$/,
